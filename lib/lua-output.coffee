@@ -21,7 +21,8 @@ class LuaOutput extends ScrollView
       setContent(serializedState.text)
 
   @content: ->
-    @div className: 'luaOutput'
+    @div className: 'luaOutput' =>
+      @h1 "Output"
 
   setContent: (text) ->
     @element.textContent = text;

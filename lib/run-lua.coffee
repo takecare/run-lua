@@ -32,7 +32,7 @@ module.exports = RunLua =
     console.log 'execute current'
     atom.workspace.getActivePaneItem().save()
     file = atom.workspace.getActivePaneItem().buffer.file.path
-    if file.substr(file.length-4, file.length) = '.lua'
+    if file.substr(file.length-4, file.length) is '.lua'
       console.log 'is lua'
       command = atom.config.get 'run-lua.executable'
       args = [file]

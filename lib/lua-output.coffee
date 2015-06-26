@@ -13,7 +13,8 @@ class LuaOutput extends ScrollView
     # message.textContent = "The RunLua package is Alive! It's ALIVE!"
     # message.classList.add('message')
     # @element.appendChild(message)
-    log 'createLuaOutput'
+    super
+    console.log 'createLuaOutput'
     @element = document.createElement('div')
     @element.classList.add('luaOutput')
     if serializedState.text
@@ -25,9 +26,11 @@ class LuaOutput extends ScrollView
   setContent: (text) ->
     @element.textContent = text;
     @output = serializedState.text
+    console.log 'set content to ' + text
 
   serialize: ->
-
+    @output
 
   # Tear down any state and detach
   destroy: ->
+    @output = null

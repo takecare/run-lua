@@ -12,7 +12,8 @@ module.exports = RunLua =
   subscriptions: null
 
   activate: (state) ->
-    @outputView = new LuaOutput(state.runLuaViewState)
+    console.log 'activated'
+    @outputView = new LuaOutput(state.outputViewState)
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
@@ -20,18 +21,22 @@ module.exports = RunLua =
     @subscriptions.add atom.commands.add 'atom-workspace', 'run-lua:executeCurrent': => @executeCurent()
 
   deactivate: ->
+    console.log 'deactivated'
     @subscriptions.dispose()
     @outputView.destroy()
 
   serialize: ->
-    runLuaViewState: @outputView.serialize()
+    outputViewState: @outputView.serialize()
 
   executeCurrent: ->
+    console.log 'execute current'
     atom.workspace.getActivePaneItem().save()
     file = atom.workspace.getActivePaneItem().buffer.file.path
-    command = atom.config.get 'run-lua.executable'
-    args = [file]
-    out = ''
-    stdout = (output) -> out += output
-    exit = -> @outputView.setContent(out);
-    command = new BufferedProcess({command, args, stdout, exit});
+    if file.substr(file.length-4, file.length) = '.lua'
+      console.log 'is lua'
+      command = atom.config.get 'run-lua.executable'
+      args = [file]
+      out = ''
+      stdout = (output) -> out += output
+      exit = -> @outputView.setContent(out);
+      command = new BufferedProcess({command, args, stdout, exit});

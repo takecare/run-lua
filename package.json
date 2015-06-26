@@ -1,10 +1,9 @@
 {
   "name": "run-lua",
   "main": "./lib/run-lua",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Saves and executes lua scripts into a separate output pane.",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {
     "atom-workspace": "run-lua:toggle"
   },

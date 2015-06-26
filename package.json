@@ -4,9 +4,6 @@
   "version": "0.0.5",
   "description": "Saves and executes lua scripts into a separate output pane.",
   "keywords": [],
-  "activationCommands": {
-    "atom-workspace": "run-lua:executeCurent"
-  },
   "repository": "https://github.com/dqsully/run-lua",
   "license": "MIT",
   "engines": {

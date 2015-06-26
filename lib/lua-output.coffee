@@ -15,12 +15,13 @@ class LuaOutput extends ScrollView
     # @element.appendChild(message)
     super
     console.log 'createLuaOutput'
+    @element = document.createElement('div')
     @element.classList.add('luaOutput')
     if serializedState.text
       setContent(serializedState.text)
 
   @content: ->
-    @element
+    @div className: 'luaOutput'
 
   setContent: (text) ->
     @element.textContent = text;

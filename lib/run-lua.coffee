@@ -1,5 +1,7 @@
 {CompositeDisposable} = require 'atom'
 ChildProcess = require 'child_process'
+Url = require 'url'
+LuaOutput = require './lua-output'
 
 module.exports = RunLua =
   config:
@@ -10,23 +12,28 @@ module.exports = RunLua =
   subscriptions: null
 
   activate: (state) ->
-    console.log 'activated'
-    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
-
-    # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'run-lua:executeCurrent': => @executeCurrent()
+    @subscriptions.add atom.workspace.addOpener @lua_opener.bind this
 
   deactivate: ->
-    console.log 'deactivated'
     @subscriptions.dispose()
 
   serialize: ->
+
+  lua_opener: (url) ->
+    if Url.parse(url).protocol is 'lua-output:'
+      return new LuaOutput url.substr 13
 
   executeCurrent: ->
     atom.workspace.getActivePaneItem().save()
     file = atom.workspace.getActivePaneItem().buffer.file.path
     if file.substr(file.length-4, file.length) is '.lua'
-      atom.workspace.open('lua-output://', {split: 'right'}).then (view) ->
-        process = ChildProcess.exec (atom.config.get 'run-lua.executable') + ' "' + file + '"', (error, stdout, stderr) ->
-          view.setText(stdout);
+      atom.workspace.open('lua-output://' + file, {split: 'right', activatePane: false}).then (view) ->
+      #   process = ChildProcess.exec (atom.config.get 'run-lua.executable') + ' "' + file + '"', (error, stdout, stderr) ->
+      #     view.setText stdout
+        process = ChildProcess.spawn (atom.config.get 'run-lua.executable'), [file]
+        process.stdout.on 'data', (data) ->
+          view.addLine data
+        process.stderr.on 'data', (data) ->
+          view.addLine 'ERROR: ' + data

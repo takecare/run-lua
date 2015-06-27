@@ -1,7 +1,7 @@
 {
   "name": "run-lua",
   "main": "./lib/run-lua",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Saves and executes lua scripts into a separate output pane.",
   "keywords": [],
   "repository": "https://github.com/dqsully/run-lua",

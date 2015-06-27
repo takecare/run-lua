@@ -1,6 +1,6 @@
 LuaOutput = require './lua-output'
 {CompositeDisposable} = require 'atom'
-BufferedProcess = require 'atom'
+{BufferedProcess} = require 'atom'
 
 module.exports = RunLua =
   config:
@@ -18,7 +18,7 @@ module.exports = RunLua =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'run-lua:executeCurrent': => @executeCurent()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'run-lua:executeCurrent': => @executeCurrent()
 
   deactivate: ->
     console.log 'deactivated'
@@ -33,10 +33,11 @@ module.exports = RunLua =
     atom.workspace.getActivePaneItem().save()
     file = atom.workspace.getActivePaneItem().buffer.file.path
     if file.substr(file.length-4, file.length) is '.lua'
+      v = @outputView
       console.log 'is lua'
-      command = atom.config.get 'run-lua.executable'
-      args = [file]
+      cmd = atom.config.get 'run-lua.executable'
+      args = ['"' + file + '""']
       out = ''
       stdout = (output) -> out += output
-      exit = -> @outputView.setContent(out);
-      command = new BufferedProcess({command, args, stdout, exit});
+      exit = -> @v.setContent(out);
+      command = new BufferedProcess({cmd, args, stdout, exit});

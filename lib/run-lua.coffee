@@ -29,7 +29,7 @@ module.exports = RunLua =
     aPI = atom.workspace.getActivePaneItem()
     atom.workspace.getActivePane().saveActiveItem()
     file = aPI.getPath()
-    if file
+    if not file
       return
     if file.substr(file.length-4, file.length) is '.lua'
       atom.workspace.open('lua-output://' + file, {split: 'right', activatePane: false}).then (view) ->

@@ -27,7 +27,7 @@ module.exports = RunLua =
 
   executeCurrent: ->
     aPI = atom.workspace.getActivePaneItem()
-    atom.worspace.getActivePane().saveActiveItem()
+    atom.workspace.getActivePane().saveActiveItem()
     file = aPI.getPath()
     if file
       return

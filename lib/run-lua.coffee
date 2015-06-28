@@ -26,8 +26,11 @@ module.exports = RunLua =
       return new LuaOutput url.substr 13
 
   executeCurrent: ->
-    atom.workspace.getActivePaneItem().save()
-    file = atom.workspace.getActivePaneItem().buffer.file.path
+    aPI = atom.workspace.getActivePaneItem()
+    atom.worspace.getActivePane().saveActiveItem()
+    file = aPI.getPath()
+    if file
+      return
     if file.substr(file.length-4, file.length) is '.lua'
       atom.workspace.open('lua-output://' + file, {split: 'right', activatePane: false}).then (view) ->
       #   process = ChildProcess.exec (atom.config.get 'run-lua.executable') + ' "' + file + '"', (error, stdout, stderr) ->

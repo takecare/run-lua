@@ -9,6 +9,7 @@ module.exports = RunLua =
       type: 'string'
       default: 'lua'
       description: 'The executable path to lua.'
+
   subscriptions: null
 
   activate: (state) ->
@@ -26,17 +27,27 @@ module.exports = RunLua =
       return new LuaOutput url.substr 13
 
   executeCurrent: ->
-    aPI = atom.workspace.getActivePaneItem()
-    atom.workspace.getActivePane().saveActiveItem()
-    file = aPI.getPath()
-    if not file
+    #aPI = atom.workspace.getActivePaneItem()
+    #atom.workspace.getActivePane().saveActiveItem()
+    #file = aPI.getPath()
+    #if not file
+
+    editor = atom.workspace.getActiveTextEditor()
+    editor = atom.workspace.getActivePaneItem() if not editor
+
+    editor.save()
+
+    file = editor?.buffer.file
+    filePath = file?.path
+    #file = editor?.buffer.file.path #aPI.getPath()
+
+    if not filePath
       return
-    if file.substr(file.length-4, file.length) is '.lua'
-      atom.workspace.open('lua-output://' + file, {split: 'right', activatePane: false}).then (view) ->
-      #   process = ChildProcess.exec (atom.config.get 'run-lua.executable') + ' "' + file + '"', (error, stdout, stderr) ->
-      #     view.setText stdout
-        process = ChildProcess.spawn (atom.config.get 'run-lua.executable'), [file]
+    if filePath?.substr(filePath.length-4, filePath.length) is '.lua'
+      atom.workspace.open('lua-output://' + filePath, {split: 'right', activatePane: false}).then (view) ->
+        process = ChildProcess.spawn (atom.config.get 'run-lua.executable'), [filePath]
         process.stdout.on 'data', (data) ->
           view.addLine data
         process.stderr.on 'data', (data) ->
           view.addLine 'ERROR: ' + data
+        atom.workspace.activatePreviousPane()

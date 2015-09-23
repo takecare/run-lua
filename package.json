@@ -4,6 +4,9 @@
   "version": "0.2.3",
   "description": "Saves and executes lua scripts into a separate output pane.",
   "keywords": [],
+  "activationCommands": {
+    "atom-workspace": "run-lua:executeCurrent"
+  },
   "repository": "https://github.com/takecare/run-lua",
   "license": "MIT",
   "engines": {

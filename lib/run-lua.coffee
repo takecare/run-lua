@@ -41,9 +41,13 @@ module.exports = RunLua =
     filePath = file?.path
     #file = editor?.buffer.file.path #aPI.getPath()
 
+    # TODO if pane already open for this file, reuse it
+
     if not filePath
       return
     if filePath?.substr(filePath.length-4, filePath.length) is '.lua'
+      #atom.workspace.addBottomPanel({item:}) WIP
+
       atom.workspace.open('lua-output://' + filePath, {split: 'right', activatePane: false}).then (view) ->
         process = ChildProcess.spawn (atom.config.get 'run-lua.executable'), [filePath]
         process.stdout.on 'data', (data) ->

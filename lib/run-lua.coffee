@@ -27,11 +27,6 @@ module.exports = RunLua =
       return new LuaOutput url.substr 13
 
   executeCurrent: ->
-    #aPI = atom.workspace.getActivePaneItem()
-    #atom.workspace.getActivePane().saveActiveItem()
-    #file = aPI.getPath()
-    #if not file
-
     editor = atom.workspace.getActiveTextEditor()
     editor = atom.workspace.getActivePaneItem() if not editor
 
@@ -39,7 +34,6 @@ module.exports = RunLua =
 
     file = editor?.buffer.file
     filePath = file?.path
-    #file = editor?.buffer.file.path #aPI.getPath()
 
     # TODO if pane already open for this file, reuse it
 

@@ -16,7 +16,6 @@ module.exports = RunLua =
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace', 'run-lua:executeCurrent': => @executeCurrent()
     @subscriptions.add atom.workspace.addOpener @lua_opener.bind this
-    #@subscriptions.add
 
   deactivate: ->
     @subscriptions.dispose()
@@ -40,7 +39,6 @@ module.exports = RunLua =
     filePath
 
   executeLua: (filePath, f) ->
-    console.log "executeLua"
     process = ChildProcess.spawn (atom.config.get 'run-lua.executable'), [filePath]
     process.stdout.on 'data', (data) ->
       f(data)
@@ -56,6 +54,8 @@ module.exports = RunLua =
     if filePath?.substr(filePath.length-4, filePath.length) is '.lua'
       #atom.workspace.addBottomPanel({item:}) WIP
 
+      activePane = atom.workspace.getActivePane()
+
       if outputPane
         data = RunLua.executeLua(filePath, (data) ->
           outputPane.addLine('\n' + data)
@@ -64,4 +64,5 @@ module.exports = RunLua =
         atom.workspace.open('lua-output://' + filePath, {split: 'right', activatePane: false}).then (view) ->
           data = RunLua.executeLua(filePath, (data) ->
             view.addLine(data)
+            activePane.activate()
           )

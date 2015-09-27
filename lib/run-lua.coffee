@@ -22,16 +22,13 @@ module.exports = RunLua =
     @subscriptions.dispose()
 
   lua_opener: (url) ->
-    console.log "lua opener"
     if Url.parse(url).protocol is 'lua-output:'
       return new LuaOutput url.substr 13
 
   getOutputPane: ->
     editors = atom.workspace.getTextEditors()
     for editor in editors
-      #filePath = editor?.buffer.file?.path
-      #if filePath.indexOf("lua-output") is 0
-      if editor insanceof LuaOutput
+      if editor instanceof LuaOutput
         return editor
     return
 
@@ -41,10 +38,6 @@ module.exports = RunLua =
     file = editor?.buffer.file
     filePath = file?.path
     filePath
-
-  goToPreviousPaneIfNedded: -> #WIP
-    filePath = @getFilePath()
-    atom.workspace.activatePreviousPane() if filePath.indexOf("lua-output") is 0
 
   executeLua: (filePath, f) ->
     console.log "executeLua"
@@ -56,19 +49,19 @@ module.exports = RunLua =
 
   executeCurrent: ->
     filePath = @getFilePath()
-
-    # TODO if pane already open for this file, reuse it
+    outputPane = @getOutputPane()
 
     if not filePath
       return
     if filePath?.substr(filePath.length-4, filePath.length) is '.lua'
       #atom.workspace.addBottomPanel({item:}) WIP
 
-      # TODO get output pane if there's one
-
-      # activatePane seems to be failing on first launch
-      atom.workspace.open('lua-output://' + filePath, {split: 'right', activatePane: false}).then (view) ->
+      if outputPane
         data = RunLua.executeLua(filePath, (data) ->
-          view.addLine(data)
+          outputPane.addLine('\n' + data)
         )
-        #atom.workspace.activatePreviousPane()
+      else
+        atom.workspace.open('lua-output://' + filePath, {split: 'right', activatePane: false}).then (view) ->
+          data = RunLua.executeLua(filePath, (data) ->
+            view.addLine(data)
+          )

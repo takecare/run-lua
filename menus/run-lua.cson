@@ -3,7 +3,7 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'run-lua'
+      'label': 'Run Lua'
       'submenu': [
         {
           'label': 'Execute Lua Script'

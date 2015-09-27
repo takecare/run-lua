@@ -13,5 +13,6 @@ class LuaOutput extends TextEditor
       atom.workspace.paneForItem(this).saveItemAs(this)
   addLine: (text) ->
     @setText @getText() + text
+    @scrollToBottom()
 
 module.exports = LuaOutput

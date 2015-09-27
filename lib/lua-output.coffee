@@ -15,5 +15,4 @@ class LuaOutput extends TextEditor
     @setText @getText() + text
     @scrollToBottom()
 
-
 module.exports = LuaOutput
